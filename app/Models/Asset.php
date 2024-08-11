@@ -10,6 +10,12 @@ class Asset extends Model
 {
     use HasFactory, HasUuids;
 
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'name',
         'value'
