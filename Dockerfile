@@ -48,6 +48,7 @@ RUN echo "user = www-data" >> /usr/local/etc/php-fpm.d/docker-php-serversideup-p
 ############################################
 FROM base AS deploy
 COPY --chown=www-data:www-data . /var/www/html
+RUN composer install --no-dev
 
 # Create the SQLite directory and set the owner to www-data (remove this if you're not using SQLite)
 # RUN mkdir -p /var/www/html/.infrastructure/volume_data/sqlite/ && \
