@@ -54,14 +54,15 @@ WORKDIR /var/www/html
 
 # Copy only the package.json and composer.json to leverage caching
 COPY --chown=www-data:www-data package*.json ./
-COPY --chown=www-data:www-data composer.json ./
 
 # Install npm and PHP dependencies
 RUN npm install --production
+
+COPY --chown=www-data:www-data . .
+
 RUN composer install --no-dev
 
 # Copy the rest of the application code
-COPY --chown=www-data:www-data . .
 
 # Build static assets if necessary
 RUN npm run build
