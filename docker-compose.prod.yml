@@ -4,9 +4,7 @@ services:
       context: .
     environment:
       PHP_OPCACHE_ENABLE: "1"
-      APP_KEY: "${APP_KEY}"
-      DB_URL: "${DB_URL}"
-      APP_URL: "${APP_URL}"
+      AUTORUN_ENABLED: true
     volumes:
       - "storage_private:/var/www/html/storage/app/private/"
       - "storage_public:/var/www/html/storage/app/public/"
