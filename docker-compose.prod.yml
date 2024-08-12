@@ -4,18 +4,14 @@ services:
       context: .
     environment:
       PHP_OPCACHE_ENABLE: "1"
+    ports:
+      - 8080:8080
 
     volumes:
       - "storage_private:/var/www/html/storage/app/private/"
       - "storage_public:/var/www/html/storage/app/public/"
       - "storage_sessions:/var/www/html/storage/framework/sessions"
       - "storage_logs:/var/www/html/storage/logs"
-    labels:
-      - traefik.enable=true
-      - "traefik.http.routers.<unique_router_name>.rule=Host(`coolify.io`) && PathPrefix(`/`)"
-      - traefik.http.routers.<unique_router_name>.entryPoints=http
-
-
 
 volumes:
   certificates:
