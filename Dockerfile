@@ -4,21 +4,19 @@
 
 # Learn more about the Server Side Up PHP Docker Images at:
 # https://serversideup.net/open-source/docker-php/
-FROM serversideup/php:8.3-fpm-nginx-alpine AS base
+FROM serversideup/php:8.3-unit AS base
 
 ## Uncomment if you need to install additional PHP extensions
 USER root
 RUN install-php-extensions memcached
-RUN apk add --no-cache nodejs npm
+RUN #apk add --no-cache nodejs npm
 
 
-FROM base as dependancies
+FROM node:latest AS dependancies
 WORKDIR /var/www/html
 
 COPY --chown=www-data:www-data . .
-
 RUN npm install
-
 RUN npm run build
 
 ############################################
