@@ -12,7 +12,7 @@ RUN install-php-extensions memcached
 RUN #apk add --no-cache nodejs npm
 
 
-FROM node:latest AS dependancies
+FROM node:lts-alpine AS dependancies
 WORKDIR /var/www/html
 
 COPY --chown=www-data:www-data . .
