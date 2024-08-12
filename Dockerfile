@@ -12,12 +12,28 @@ RUN install-php-extensions memcached
 RUN #apk add --no-cache nodejs npm
 
 
-FROM node:lts-alpine AS dependancies
-WORKDIR /var/www/html
+FROM node:lts-alpine AS node
 
-COPY --chown=www-data:www-data . .
+WORKDIR /app
+
+COPY package*.json vite.config.js tailwind.config.js postcss.config.js ./
+COPY resources resources
+COPY public public
+
 RUN npm install
 RUN npm run build
+
+FROM base AS composer
+WORKDIR /app
+
+COPY composer*.json artisan ./
+COPY bootstrap bootstrap
+COPY storage storage
+COPY routes routes
+COPY resources/views resources/views
+COPY app app
+RUN composer install --no-dev
+
 
 ############################################
 # Development Image
@@ -49,11 +65,13 @@ RUN echo "user = www-data" >> /usr/local/etc/php-fpm.d/docker-php-serversideup-p
 FROM base AS deploy
 WORKDIR /var/www/html
 
-COPY --from=dependancies --chown=www-data:www-data /var/www/html/public/build ./public/build
+COPY --from=node --chown=www-data:www-data /app/public/build ./public/build
+
+
+COPY --from=composer --chown=www-data:www-data /app/vendor ./vendor
 
 COPY --chown=www-data:www-data . .
 
-RUN composer install --no-dev
 
 STOPSIGNAL SIGQUIT
 
