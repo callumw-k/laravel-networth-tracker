@@ -9,6 +9,7 @@ FROM serversideup/php:8.3-fpm-nginx-alpine AS base
 ## Uncomment if you need to install additional PHP extensions
 USER root
 RUN install-php-extensions memcached
+RUN apk add --no-cache nodejs npm
 
 ############################################
 # Development Image
@@ -48,7 +49,12 @@ RUN echo "user = www-data" >> /usr/local/etc/php-fpm.d/docker-php-serversideup-p
 ############################################
 FROM base AS deploy
 COPY --chown=www-data:www-data . /var/www/html
+WORKDIR /var/www/html
 RUN composer install --no-dev
+
+# Run npm build (if necessary for production)
+RUN npm ci && npm run build
+
 
 # Create the SQLite directory and set the owner to www-data (remove this if you're not using SQLite)
 # RUN mkdir -p /var/www/html/.infrastructure/volume_data/sqlite/ && \
