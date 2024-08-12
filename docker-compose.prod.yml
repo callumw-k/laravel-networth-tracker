@@ -4,8 +4,6 @@ services:
       context: .
     environment:
       PHP_OPCACHE_ENABLE: "1"
-    networks:
-      - web-public
     ports:
       - 8080:8080
     volumes:
@@ -22,6 +20,3 @@ volumes:
   storage_logs:
   database_sqlite:
   postgres:
-
-networks:
-  web-public:
