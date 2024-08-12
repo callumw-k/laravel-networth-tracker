@@ -18,7 +18,8 @@ class Asset extends Model
      */
     protected $fillable = [
         'name',
-        'value'
+        'value',
+        'description'
     ];
 
     protected function casts(): array
