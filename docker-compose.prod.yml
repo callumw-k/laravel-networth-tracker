@@ -11,19 +11,11 @@ services:
       - "storage_sessions:/var/www/html/storage/framework/sessions"
       - "storage_logs:/var/www/html/storage/logs"
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.middlewares.gzip.compress=true"
-      - "traefik.http.routers.<unique_router_name>.entryPoints=http"
-      - "traefik.http.routers.<unique_router_name>.rule=Host(`laravel.callumwk.com`) && PathPrefix(`/`)"
-      - "traefik.http.routers.<unique_router_name>.service=<unique_router_name>"
-      - "traefik.http.services.<unique_router_name>.loadbalancer.server.port=80"
-      - "caddy_0.encode=zstd gzip"
-      - "caddy_0.handle_path.0_reverse_proxy={{upstreams 80}}"
-      - "caddy_0.handle_path=/*"
-      - "caddy_0.header=-Server"
-      - "caddy_0.try_files={path} /index.html /index.php"
-      - "caddy_0=https://laravel.callumwk.com"
-      - "caddy_ingress_network=coolify"
+      - traefik.enable=true
+      - "traefik.http.routers.<unique_router_name>.rule=Host(`coolify.io`) && PathPrefix(`/`)"
+      - traefik.http.routers.<unique_router_name>.entryPoints=http
+
+
 
 volumes:
   certificates:
