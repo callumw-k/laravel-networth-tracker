@@ -48,19 +48,26 @@ RUN echo "user = www-data" >> /usr/local/etc/php-fpm.d/docker-php-serversideup-p
 # Production Image
 ############################################
 FROM base AS deploy
-COPY --chown=www-data:www-data . /var/www/html
+
+# Set the working directory
 WORKDIR /var/www/html
+
+# Copy only the package.json and composer.json to leverage caching
+COPY --chown=www-data:www-data package*.json ./
+COPY --chown=www-data:www-data composer.json ./
+
+# Install npm and PHP dependencies
+RUN npm install --production
 RUN composer install --no-dev
 
-# Run npm build (if necessary for production)
-RUN npm ci && npm run build
+# Copy the rest of the application code
+COPY --chown=www-data:www-data . .
 
-
-# Create the SQLite directory and set the owner to www-data (remove this if you're not using SQLite)
-# RUN mkdir -p /var/www/html/.infrastructure/volume_data/sqlite/ && \
-#     chown -R www-data:www-data /var/www/html/.infrastructure/volume_data/sqlite/
+# Build static assets if necessary
+RUN npm run build
 
 # Ensure PHP-FPM gracefully stops
 STOPSIGNAL SIGQUIT
 
 USER www-data
+
