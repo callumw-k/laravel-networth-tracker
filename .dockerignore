@@ -2,8 +2,13 @@
 .github
 .infrastructure
 Dockerfile
+node_modules
+.editorconfig
+.env.example
+.gitattributes
 docker-*.yml
 .gitlab-ci.yml
+README.md
 .spin*
 .git
 

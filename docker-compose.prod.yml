@@ -18,6 +18,5 @@ volumes:
   storage_sessions:
   storage_logs:
   database_sqlite:
-  postgres:
 
 
