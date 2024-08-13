@@ -2,16 +2,16 @@
 # Base Image
 ############################################
 
-# Learn more about the Server Side Up PHP Docker Images at:
-# https://serversideup.net/open-source/docker-php/
 FROM serversideup/php:8.3-unit AS base
 
-## Uncomment if you need to install additional PHP extensions
 USER root
 RUN install-php-extensions memcached
-RUN #apk add --no-cache nodejs npm
 
 
+
+############################################
+# Node installs
+############################################
 FROM node:lts-alpine AS node
 
 WORKDIR /app
@@ -23,6 +23,10 @@ COPY public public
 RUN npm install
 RUN npm run build
 
+
+############################################
+# Composer installs
+############################################
 FROM base AS composer
 WORKDIR /app
 
@@ -50,7 +54,9 @@ RUN docker-php-serversideup-set-id www-data $USER_ID:$GROUP_ID  && \
 
 USER www-data
 
-###
+############################################
+# C/I Install
+############################################
 
 FROM base AS ci
 
@@ -59,19 +65,17 @@ RUN echo "user = www-data" >> /usr/local/etc/php-fpm.d/docker-php-serversideup-p
     echo "group = www-data" >> /usr/local/etc/php-fpm.d/docker-php-serversideup-pool.conf
 
 
-
-###
+############################################
+# Prod Image
+############################################
 
 FROM base AS deploy
 WORKDIR /var/www/html
 
 COPY --from=node --chown=www-data:www-data /app/public/build ./public/build
-
-
 COPY --from=composer --chown=www-data:www-data /app/vendor ./vendor
 
 COPY --chown=www-data:www-data . .
-
 
 STOPSIGNAL SIGQUIT
 
